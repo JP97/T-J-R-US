@@ -25,9 +25,21 @@ namespace TØJ_R_US.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProduct(int? category, string? type)
         {
-            return await _context.Product.ToListAsync();
+            var result = await _context.Product.ToListAsync();
+
+            if (category.HasValue && type != null)
+            {
+                result = result.Where(item => item.Category == category && item.Type == type).ToList();
+            }
+
+            if (category.HasValue)
+            {
+                result = result.Where(item => item.Category == category).ToList();
+            }
+
+            return result;
         }
 
         // GET: api/Products/5
